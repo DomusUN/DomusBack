@@ -1,4 +1,4 @@
-package DomusBack
+package main
 
 import (
 	"DomusBack/app"
