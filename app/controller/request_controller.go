@@ -74,3 +74,25 @@ func (uc RequestMetadata) GetAllRequests(c *gin.Context) {
 	c.JSON(http.StatusAccepted, requests)
 	return
 }
+
+func (uc RequestMetadata) GetRequestByWorker(c *gin.Context) {
+	id := c.Param("id")
+
+	// Check ID
+	idUser, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	oid, err := uc.Rmr.GetRequestByWorker(idUser)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, gin.H{"request_id": oid})
+
+	return
+}

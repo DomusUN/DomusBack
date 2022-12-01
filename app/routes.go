@@ -46,6 +46,7 @@ func InitRoutes(router *gin.Engine) error {
 
 	//Get requests
 	router.GET("/requests", ucr.GetAllRequests)
+	router.GET("/requests/worker/:id", ucr.GetRequestByWorker)
 
 	// Get workers
 	router.GET("/users/workers", umc.GetAllWorkers)

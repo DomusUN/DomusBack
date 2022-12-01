@@ -15,6 +15,7 @@ type RequestMetadata interface {
 	Create(uvm *domain.RequestMetadata) (primitive.ObjectID, error)
 	ChangeState(primitive.ObjectID, int) (primitive.ObjectID, error)
 	GetAllRequests() ([]*domain.RequestMetadata, error)
+	GetRequestByWorker(primitive.ObjectID) ([]*domain.RequestMetadata, error)
 }
 
 type RequestMetadataMongo struct{}
@@ -78,6 +79,31 @@ func (u RequestMetadataMongo) GetAllRequests() ([]*domain.RequestMetadata, error
 	var requests []*domain.RequestMetadata
 
 	result, err := collectionRequest.Find(ctx, bson.D{})
+
+	if err != nil {
+		log.Printf("Could not get the collections: %v", err)
+		return []*domain.RequestMetadata{}, err
+	}
+
+	for result.Next(ctx) {
+		var request *domain.RequestMetadata
+		if err = result.Decode(&request); err != nil {
+			return nil, err
+		}
+		requests = append(requests, request)
+	}
+
+	return requests, err
+}
+
+func (u RequestMetadataMongo) GetRequestByWorker(idUser primitive.ObjectID) ([]*domain.RequestMetadata, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+
+	defer cancel()
+
+	var requests []*domain.RequestMetadata
+
+	result, err := collectionRequest.Find(ctx, bson.M{"id_worker": idUser, "state": 0})
 
 	if err != nil {
 		log.Printf("Could not get the collections: %v", err)
