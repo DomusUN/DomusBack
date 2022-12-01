@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type ServideMetadata interface {
+type ServiceMetadata interface {
 	GetAllServices() ([]*domain.ServicesMetadata, error)
 	GetServiceById(int) (*domain.ServicesMetadata, error)
 }
@@ -53,7 +53,7 @@ func (u ServiceMetadataMongo) GetServiceById(id int) (*domain.ServicesMetadata, 
 	err := collectionServices.FindOne(ctx, bson.M{"service_id": id}).Decode(&service)
 
 	if err != nil {
-		log.Printf("Could not get the collection: %v", err)
+		log.Printf("Could not get the collectionUser: %v", err)
 		return nil, err
 	}
 

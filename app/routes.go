@@ -8,15 +8,25 @@ import (
 
 var umc controller.UserMetadata
 
-var umcs controller.ServiceMetadata
+var ucs controller.ServiceMetadata
+
+var ucr controller.RequestMetadata
 
 // TODO: Replace this with dependency injection.
 func InitDepenedencies() {
+	// User
 	umr := repository.UserMetadataMongo{}
 	umc = controller.UserMetadata{Umr: umr}
 
-	umrs := repository.ServiceMetadataMongo{}
-	umcs = controller.ServiceMetadata{Umr: umrs}
+	// Service
+	mrs := repository.ServiceMetadataMongo{}
+	ucs = controller.ServiceMetadata{Mrs: mrs}
+
+	// Request
+	rmr := repository.RequestMetadataMongo{}
+	ucr = controller.RequestMetadata{Rmr: rmr}
+
+	// Workers
 }
 
 func InitRoutes(router *gin.Engine) error {
@@ -27,8 +37,11 @@ func InitRoutes(router *gin.Engine) error {
 	router.POST("/users/role/worker/:id", umc.AddRoleWorker)
 
 	// Get services
-	router.GET("/services", umcs.GetAllServices)
-	router.GET("/services/:id", umcs.GetServiceById)
+	router.GET("/services", ucs.GetAllServices)
+	router.GET("/services/:id", ucs.GetServiceById)
+
+	// Create Request
+	router.POST("/requests", ucr.Create)
 
 	return nil
 }

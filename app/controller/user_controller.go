@@ -5,7 +5,6 @@ import (
 	"DomusBack/app/repository"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log"
 	"net/http"
 )
 
@@ -22,7 +21,6 @@ func (uc UserMetadata) CreateUser(c *gin.Context) {
 		return
 	}
 
-	log.Printf("%v\n", user)
 	oid, err := uc.Umr.Create(&user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

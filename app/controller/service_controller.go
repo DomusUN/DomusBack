@@ -8,12 +8,12 @@ import (
 )
 
 type ServiceMetadata struct {
-	Umr repository.ServideMetadata
+	Mrs repository.ServiceMetadata
 }
 
 func (uc ServiceMetadata) GetAllServices(c *gin.Context) {
 
-	services, err := uc.Umr.GetAllServices()
+	services, err := uc.Mrs.GetAllServices()
 
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
@@ -36,7 +36,7 @@ func (uc ServiceMetadata) GetServiceById(c *gin.Context) {
 
 	println("EXITO TOTAL")
 
-	service, err := uc.Umr.GetServiceById(idService)
+	service, err := uc.Mrs.GetServiceById(idService)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})

@@ -20,7 +20,7 @@ type UserMetadata interface {
 
 type UserMetadataMongo struct{}
 
-var collection = database.OpenCollection(database.Client, "users")
+var collectionUser = database.OpenCollection(database.Client, "users")
 
 func (u UserMetadataMongo) Create(uvm *domain.UsersMetadata) (primitive.ObjectID, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -29,7 +29,7 @@ func (u UserMetadataMongo) Create(uvm *domain.UsersMetadata) (primitive.ObjectID
 
 	uvm.ID = primitive.NewObjectID()
 
-	result, err := collection.InsertOne(ctx, uvm)
+	result, err := collectionUser.InsertOne(ctx, uvm)
 	if err != nil {
 		log.Printf("Could not create userdata: %v", err)
 		return primitive.NilObjectID, err
@@ -45,7 +45,7 @@ func (u UserMetadataMongo) GetUserById(id primitive.ObjectID) (*domain.UsersMeta
 
 	defer cancel()
 	var user *domain.UsersMetadata
-	err := collection.FindOne(ctx, bson.M{"_id": id}).Decode(&user)
+	err := collectionUser.FindOne(ctx, bson.M{"_id": id}).Decode(&user)
 
 	return user, err
 }
@@ -54,14 +54,14 @@ func (u UserMetadataMongo) AddRoleClient(id primitive.ObjectID, client *domain.C
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	//Delete previous role if exists
-	err := collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$unset": bson.M{"worker": ""}}, options.FindOneAndUpdate())
+	err := collectionUser.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$unset": bson.M{"worker": ""}}, options.FindOneAndUpdate())
 
 	if err.Err() != nil {
 		log.Printf("Could not delete old role: %v", err)
 		return id, err.Err()
 	}
 
-	err = collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"client": client, "role": 0}}, options.FindOneAndUpdate())
+	err = collectionUser.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"client": client, "role": 0}}, options.FindOneAndUpdate())
 
 	return id, err.Err()
 }
@@ -71,14 +71,14 @@ func (u UserMetadataMongo) AddRoleWorker(id primitive.ObjectID, worker *domain.W
 	defer cancel()
 
 	//Delete previous role if exists
-	err := collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$unset": bson.M{"client": ""}}, options.FindOneAndUpdate())
+	err := collectionUser.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$unset": bson.M{"client": ""}}, options.FindOneAndUpdate())
 
 	if err.Err() != nil {
 		log.Printf("Could not delete old role: %v", err)
 		return id, err.Err()
 	}
 
-	err = collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"worker": worker, "role": 1}}, options.FindOneAndUpdate())
+	err = collectionUser.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"worker": worker, "role": 1}}, options.FindOneAndUpdate())
 
 	return id, err.Err()
 }
