@@ -51,7 +51,7 @@ func (uc UserMetadata) AddRoleClient(c *gin.Context) {
 	// Add client role
 	// Check histories  list
 	if len(client.Historyservices) == 0 {
-		client.Historyservices = []domain.HistoryServices{}
+		client.Historyservices = []primitive.ObjectID{}
 	}
 	_, err = uc.Umr.AddRoleClient(userID, client)
 	if err != nil {
@@ -80,14 +80,15 @@ func (uc UserMetadata) AddRoleWorker(c *gin.Context) {
 	// Add worker role
 	// Check places list
 	if len(worker.Places) == 0 {
-		worker.Places = []string{}
+		worker.Places = []int{}
+	}
+	if len(worker.Reviews) == 0 {
+		worker.Reviews = []string{}
 	}
 	// Check the services list
-	println("SIZE: ", len(worker.ArrServices))
 	if len(worker.ArrServices) == 0 {
 		worker.ArrServices = []domain.ServicesWorker{}
 	}
-	//log.Printf("Arr Serv: %v\n", worker.ArrServices)
 	_, err = uc.Umr.AddRoleWorker(userID, worker)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})

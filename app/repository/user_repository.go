@@ -61,7 +61,7 @@ func (u UserMetadataMongo) AddRoleClient(id primitive.ObjectID, client *domain.C
 		return id, err.Err()
 	}
 
-	err = collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"client": client, "role": "CLIENT"}}, options.FindOneAndUpdate())
+	err = collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"client": client, "role": 0}}, options.FindOneAndUpdate())
 
 	return id, err.Err()
 }
@@ -78,7 +78,7 @@ func (u UserMetadataMongo) AddRoleWorker(id primitive.ObjectID, worker *domain.W
 		return id, err.Err()
 	}
 
-	err = collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"worker": worker, "role": "WORKER"}}, options.FindOneAndUpdate())
+	err = collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"worker": worker, "role": 1}}, options.FindOneAndUpdate())
 
 	return id, err.Err()
 }
