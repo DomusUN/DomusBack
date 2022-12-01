@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	"strconv"
 )
 
 // TODO: Replace with proper dependency injection.
@@ -97,6 +98,34 @@ func (uc UserMetadata) AddRoleWorker(c *gin.Context) {
 }
 
 func (uc UserMetadata) GetAllWorkers(c *gin.Context) {
-	
+	workers, err := uc.Umr.GetAllWorkers()
+
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, workers)
+	return
+}
+
+func (uc UserMetadata) GetWorkersByService(c *gin.Context) {
+	id := c.Query("service")
+
+	idService, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
+		return
+	}
+
+	workers, err := uc.Umr.GetWorkersByService(idService)
+
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, workers)
 	return
 }

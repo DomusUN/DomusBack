@@ -12,6 +12,8 @@ type UsersMetadata struct {
 	Direction string             `json:"direction" bson:"direction"`
 	Phone     string             `json:"phone" bson:"phone"`
 	Role      int                `json:"role" bson:"role"`
+	Client    ClientMetadata     `json:"client" bson:"client"`
+	Worker    WorkerMetadata     `json:"worker" bson:"worker"`
 	//Client [] Array of ints
 	//Worker [] Array of worker
 }

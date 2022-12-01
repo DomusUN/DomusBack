@@ -16,6 +16,9 @@ type UserMetadata interface {
 	GetUserById(primitive.ObjectID) (*domain.UsersMetadata, error)
 	AddRoleClient(primitive.ObjectID, *domain.ClientMetadata) (primitive.ObjectID, error)
 	AddRoleWorker(primitive.ObjectID, *domain.WorkerMetadata) (primitive.ObjectID, error)
+
+	GetAllWorkers() ([]*domain.UsersMetadata, error)
+	GetWorkersByService(int) ([]*domain.UsersMetadata, error)
 }
 
 type UserMetadataMongo struct{}
@@ -81,4 +84,53 @@ func (u UserMetadataMongo) AddRoleWorker(id primitive.ObjectID, worker *domain.W
 	err = collectionUser.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": bson.M{"worker": worker, "role": 1}}, options.FindOneAndUpdate())
 
 	return id, err.Err()
+}
+func (u UserMetadataMongo) GetAllWorkers() ([]*domain.UsersMetadata, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+
+	defer cancel()
+
+	var workers []*domain.UsersMetadata
+
+	result, err := collectionUser.Find(ctx, bson.M{"role": 1})
+
+	if err != nil {
+		log.Printf("Could not get the collections: %v", err)
+		return []*domain.UsersMetadata{}, err
+	}
+
+	for result.Next(ctx) {
+		var worker *domain.UsersMetadata
+		if err = result.Decode(&worker); err != nil {
+			return nil, err
+		}
+		workers = append(workers, worker)
+	}
+
+	return workers, err
+}
+
+func (u UserMetadataMongo) GetWorkersByService(idService int) ([]*domain.UsersMetadata, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+
+	defer cancel()
+
+	var workers []*domain.UsersMetadata
+
+	result, err := collectionUser.Find(ctx, bson.M{"role": 1, "worker.arr_services.service_id": idService})
+
+	if err != nil {
+		log.Printf("Could not get the collections: %v", err)
+		return []*domain.UsersMetadata{}, err
+	}
+
+	for result.Next(ctx) {
+		var worker *domain.UsersMetadata
+		if err = result.Decode(&worker); err != nil {
+			return nil, err
+		}
+		workers = append(workers, worker)
+	}
+
+	return workers, err
 }
