@@ -45,8 +45,8 @@ func InitRoutes(router *gin.Engine) error {
 	router.PUT("/requests/:id/state/:state", ucr.ChangeState)
 
 	// Get workers
-	router.POST("/users/worker", ucr.Create)
-	router.PUT("/requests/:id/state/:state", ucr.ChangeState)
+	//router.POST("/users/worker", ucr.GetWorkers)
+	//router.PUT("/requests/:id/state/:state", ucr.ChangeState)
 
 	return nil
 }

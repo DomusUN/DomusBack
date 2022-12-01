@@ -1,11 +1,9 @@
 package domain
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type ServicesWorker struct {
-	ServiceID primitive.ObjectID `json:"service_id" bson:"service_id"`
-	Score     float32            `json:"score" bson:"score"`
-	Price     int32              `json:"price"  bson:"price"`
+	ServiceID int32   `json:"service_id" bson:"service_id"`
+	Score     float32 `json:"score" bson:"score"`
+	Price     int32   `json:"price"  bson:"price"`
 }
 
 type WorkerMetadata struct {

@@ -95,3 +95,8 @@ func (uc UserMetadata) AddRoleWorker(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"ID": id})
 	return
 }
+
+func (uc UserMetadata) GetAllWorkers(c *gin.Context) {
+	
+	return
+}
