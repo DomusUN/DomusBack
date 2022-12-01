@@ -1,10 +1,10 @@
 package domain
 
 type HistoryServices struct {
-	Date  string
-	Score int
+	Date  string `json:"date" bson:"date"`
+	Score int    `json:"score" bson:"score"`
 }
 
 type ClientMetadata struct {
-	Historyservices []HistoryServices `json:"arr_services" bson:"arr_services"`
+	Historyservices []HistoryServices `json:"arr_hservices" bson:"arr_hservices"`
 }
