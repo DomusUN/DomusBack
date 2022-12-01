@@ -11,4 +11,5 @@ type UsersMetadata struct {
 	Lastname  string             `json:"lastname" bson:"lastname"`
 	Direction string             `json:"direction" bson:"direction"`
 	Phone     string             `json:"phone" bson:"phone"`
+	Role      string             `json:"role" bson:"role"`
 }
