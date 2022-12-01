@@ -14,7 +14,9 @@ var umcs controller.ServiceMetadata
 func InitDepenedencies() {
 	umr := repository.UserMetadataMongo{}
 	umc = controller.UserMetadata{Umr: umr}
-	umcs = controller.ServiceMetadata{Umr: umr}
+
+	umrs := repository.ServiceMetadataMongo{}
+	umcs = controller.ServiceMetadata{Umr: umrs}
 }
 
 func InitRoutes(router *gin.Engine) error {
@@ -26,5 +28,7 @@ func InitRoutes(router *gin.Engine) error {
 
 	// Get services
 	router.GET("/services", umcs.GetAllServices)
+	router.GET("/services/:id", umcs.GetServiceById)
+
 	return nil
 }
