@@ -62,3 +62,15 @@ func (uc RequestMetadata) ChangeState(c *gin.Context) {
 
 	return
 }
+
+func (uc RequestMetadata) GetAllRequests(c *gin.Context) {
+	requests, err := uc.Rmr.GetAllRequests()
+
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, requests)
+	return
+}

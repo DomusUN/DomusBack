@@ -44,6 +44,9 @@ func InitRoutes(router *gin.Engine) error {
 	router.POST("/requests", ucr.Create)
 	router.PUT("/requests/:id/state/:state", ucr.ChangeState)
 
+	//Get requests
+	router.GET("/requests", ucr.GetAllRequests)
+
 	// Get workers
 	router.GET("/users/workers", umc.GetAllWorkers)
 	router.GET("/users/workers/query", umc.GetWorkersByService)
